@@ -1,3 +1,23 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+.grid-left {
+  grid-area: 1 / 1 / 2 / 3;
+}
+
+.grid-right {
+  grid-area: 1 / 3 / 2 / 9;
+}
+
+.cls-no-bottom> :last-child {
+  padding-bottom: 0 !important;
+}
+
 .App {
   text-align: center;
 }
@@ -18,8 +38,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center; */
+  /* justify-content: center; */
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -32,6 +52,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

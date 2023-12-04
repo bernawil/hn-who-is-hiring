@@ -71,7 +71,7 @@ export function DrawerAppBar(props: { handleMenu: React.MouseEventHandler<HTMLBu
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
             Hacker News Who is Hiring
-            <Typography variant="overline" sx={{ marginLeft: "20px" }}>AUGUST 2023</Typography>
+            <Typography variant="overline" sx={{ marginLeft: "20px" }}>December 2023</Typography>
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
@@ -150,12 +150,14 @@ function App() {
         }
         positions[t as keyof Object] = positions[t as keyof Object] === undefined ? 1 : positions[t as keyof Object] + 1;
       })
-      post.metadata.remote_only_location.sort().forEach((t: string) => {
-        if (search.length && !t.includes(search)) {
-          return
+        if (post.metadata.remote_only_location) {
+            post.metadata.remote_only_location.sort().forEach((t: string) => {
+                if (search.length && !t.includes(search)) {
+                    return
+                }
+                locations[t as keyof Object] = locations[t as keyof Object] === undefined ? 1 : locations[t as keyof Object] + 1;
+            })
         }
-        locations[t as keyof Object] = locations[t as keyof Object] === undefined ? 1 : locations[t as keyof Object] + 1;
-      })
     })
     return {
       tech: Object.entries(tech), positions: Object.entries(positions), locations: Object.entries(locations)

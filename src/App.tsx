@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import './App.css';
-import { Box, Card, CardActions, CardContent, Checkbox, Chip, Collapse, FormControlLabel, InputBase, List, ListItem, ListItemIcon, Typography } from '@mui/material';
+import { Box, Card, CardActions, CardContent, Checkbox, Chip, Collapse, FormControlLabel, InputBase, List, ListItem, ListItemIcon, Typography, useMediaQuery } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -60,7 +60,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export function DrawerAppBar(props: { handleMenu: React.MouseEventHandler<HTMLButtonElement> | undefined; }) {
+export function DrawerAppBar(props: { handleMenu: React.MouseEventHandler<HTMLButtonElement> | undefined; narrow?: boolean }) {
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar component="nav">
@@ -68,7 +68,7 @@ export function DrawerAppBar(props: { handleMenu: React.MouseEventHandler<HTMLBu
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+            sx={props.narrow ? {} : { flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
             Hacker News Who is Hiring
             <Typography variant="overline" sx={{ marginLeft: "20px" }}>December 2023</Typography>
@@ -150,14 +150,14 @@ function App() {
         }
         positions[t as keyof Object] = positions[t as keyof Object] === undefined ? 1 : positions[t as keyof Object] + 1;
       })
-        if (post.metadata.remote_only_location) {
-            post.metadata.remote_only_location.sort().forEach((t: string) => {
-                if (search.length && !t.includes(search)) {
-                    return
-                }
-                locations[t as keyof Object] = locations[t as keyof Object] === undefined ? 1 : locations[t as keyof Object] + 1;
-            })
-        }
+      if (post.metadata.remote_only_location) {
+        post.metadata.remote_only_location.sort().forEach((t: string) => {
+          if (search.length && !t.includes(search)) {
+            return
+          }
+          locations[t as keyof Object] = locations[t as keyof Object] === undefined ? 1 : locations[t as keyof Object] + 1;
+        })
+      }
     })
     return {
       tech: Object.entries(tech), positions: Object.entries(positions), locations: Object.entries(locations)
@@ -168,12 +168,16 @@ function App() {
   const [positionsListOpen, setPositionsListOpen] = useState(false);
   const [locationsListOpen, setLocationsListOpen] = useState(false);
 
+  const isNarrowScreen = useMediaQuery('(max-width:600px)');
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
+
       <div className="App-header" style={{ paddingTop: '60px' }} ref={divRef}>
-        <DrawerAppBar handleMenu={() => setMenuOpen(!menuOpen)} />
-        <div className='grid'>
+        <DrawerAppBar narrow={isNarrowScreen} handleMenu={() => setMenuOpen(!menuOpen)} />
+
+        <div className={isNarrowScreen ? 'flex-vertical-mobile' : 'grid'}>
           <div className='grid-left' style={{ paddingLeft: '6px', marginTop: '10px' }}>
 
             <Card>
@@ -324,6 +328,7 @@ function App() {
             </List>
 
           </div>
+
           <div className='grid-right'>
             <List disablePadding>
               {HN_POSTS.map(post => <ListItem key={post.id} >
